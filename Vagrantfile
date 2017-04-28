@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
 
   # Create x worker nodes
   (1..3).each do |i|
-    config.vm.define "kh-node0#{i}" do |node|
+    config.vm.define "kh-worker0#{i}" do |node|
       node.vm.provision "shell",
         inline: "echo hello from node #{i}"
     end
@@ -65,13 +65,16 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
+  config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
   #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+     # Set linked clones to prevent multiple imports of base box
+     vb.linked_clone = true
+     # Customize the amount of memory on the VM:
+     vb.memory = "1024"
+     vb.cpus = "1"
+  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
