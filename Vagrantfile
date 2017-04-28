@@ -12,7 +12,23 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "base"
+  config.vm.box = "ubuntu/xenial64"
+
+  # Create x controllers
+  (1..3).each do |i|
+    config.vm.define "kh-control0#{i}" do |node|
+      node.vm.provision "shell",
+        inline: "echo hello from node #{i}"
+    end
+  end
+
+  # Create x worker nodes
+  (1..3).each do |i|
+    config.vm.define "kh-node0#{i}" do |node|
+      node.vm.provision "shell",
+        inline: "echo hello from node #{i}"
+    end
+  end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
