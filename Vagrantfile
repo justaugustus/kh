@@ -15,25 +15,31 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/xenial64"
 
   # Create x controllers
-  (1..3).each do |i|
+  (0..2).each do |i|
     config.vm.define "kh-control0#{i}" do |node|
-      node.vm.provision "shell",
-        inline: "echo hello from node #{i}"
+      node.vm.hostname = "kh-control0#{i}"
+      node.vm.network "private_network", :name => 'vboxnet1', ip: "10.240.0.1#{i}"
+      node.vm.synced_folder "./shared/control", "/root/k8s-control"
+      #node.vm.provision "shell",
+      #  inline: "echo hello from node #{i}"
     end
   end
 
   # Create x worker nodes
-  (1..3).each do |i|
+  (0..2).each do |i|
     config.vm.define "kh-worker0#{i}" do |node|
-      node.vm.provision "shell",
-        inline: "echo hello from node #{i}"
+      node.vm.hostname = "kh-worker0#{i}"
+      node.vm.network "private_network", :name => 'vboxnet1', ip: "10.240.0.2#{i}"
+      node.vm.synced_folder "./shared/worker", "/root/k8s-worker"
+      #node.vm.provision "shell",
+      #  inline: "echo hello from node #{i}"
     end
   end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
+  config.vm.box_check_update = true
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
@@ -59,7 +65,7 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "./shared/all", "/root/k8s"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
