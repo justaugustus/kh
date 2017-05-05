@@ -1,7 +1,9 @@
 shared/
 ca/
 pkg/
+.vagrant/
 
 *.csr
 *.pem
 *.deb
+*.log
