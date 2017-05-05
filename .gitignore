@@ -1,3 +1,7 @@
+shared/
+ca/
+pkg/
+
 *.csr
 *.pem
-ca/
+*.deb
